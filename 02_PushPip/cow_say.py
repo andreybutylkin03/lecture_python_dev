@@ -10,6 +10,8 @@ parser.add_argument("-n", )
 parser.add_argument("-T", )
 parser.add_argument("-W", )
 parser.add_argument("-bdgpstwy", )
+parser.add_argument("input_string", )
 
-parser.parse_args()
+args = parser.parse_args()
 
+print(cowsay(args.input_string))
