@@ -43,9 +43,7 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
 
 
 def ask(prompt: str, valid: list[str] = None) -> str:
-    fd = open('cow.txt', "r")
-    cf = fd.read()
-    fd.close()
+    cf = '<o:O>\n  |  \n / \\\n_\\ /_\n'
 
     if valid is None:
         print(cowsay(prompt, cowfile=cf))
