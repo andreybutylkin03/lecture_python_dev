@@ -43,16 +43,18 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
 
 
 def ask(prompt: str, valid: list[str] = None) -> str:
-    idx_c = random.randrange(0, len(list_cows()))
+    fd = open('cow.txt', "r")
+    cf = fd.read()
+    fd.close()
 
     if valid is None:
-        print(cowsay(prompt, cow=list_cows()[idx_c]))
+        print(cowsay(prompt, cowfile=cf))
         return input()
     else:
         s = None
 
         while s not in valid:
-            print(cowsay(prompt, cow=list_cows()[idx_c]))
+            print(cowsay(prompt, cowfile=cf))
             s = input()
 
         return s
