@@ -39,5 +39,17 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
     print(f"Попыток сделано: {tr}")
 
 
+def ask(prompt: str, valid: list[str] = None) -> str:
+    if valid is None:
+        return input(prompt)
+    else:
+        s = None
+
+        while s not in valid:
+            s = input(prompt)
+
+        return s
+
+
 if __name__ == "__main__":
     print(bullscows("ропот", "полип"))
