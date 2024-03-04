@@ -1,5 +1,7 @@
 import sys
 import random
+import urllib.request
+import os.path
 
 def bullscows(guess: str, secret: str) -> (int, int):
     cow = 0
@@ -24,7 +26,7 @@ def bullscows(guess: str, secret: str) -> (int, int):
 
 
 def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
-    secret = words[random.ranrange(0, len(words))]
+    secret = words[random.randrange(0, len(words))]
     guess = None
     tr = 0
 
@@ -36,7 +38,7 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
 
         inform("Быки: {}, Коровы: {}", bulls, cows)
 
-    print(f"Попыток сделано: {tr}")
+    return tr 
 
 
 def ask(prompt: str, valid: list[str] = None) -> str:
@@ -56,4 +58,21 @@ def inform(format_string: str, bulls: int, cows: int) -> None:
 
 
 if __name__ == "__main__":
-    print(bullscows("ропот", "полип"))
+    try:
+        d = urllib.request.urlopen(sys.argv[1]).read().decode().split('\n')
+    except:
+        if os.path.exists(sys.argv[1]):
+            d = open(sys.argv[1], "r").read().split('\n')
+        else:
+            print("Invalid arguments")
+            sys.exit()
+
+    if len(sys.argv) == 3:
+        len_of = int(sys.argv[2])
+    else:
+        len_of = 5
+
+    d = list(filter(lambda x: len(x) == len_of, d))
+
+    print(f"Попыток сделано: {gameplay(ask, inform, d)}")
+
