@@ -1,5 +1,5 @@
 import sys
-
+import random
 
 def bullscows(guess: str, secret: str) -> (int, int):
     cow = 0
@@ -24,7 +24,19 @@ def bullscows(guess: str, secret: str) -> (int, int):
 
 
 def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
-    pass
+    secret = words[random.ranrange(0, len(words))]
+    guess = None
+    tr = 0
+
+    while guess != secret:
+        guess = ask("Введите слово: ", words)
+        tr += 1
+
+        bulls, cows = bullscows(guess, secret)
+
+        inform("Быки: {}, Коровы: {}", bulls, cows)
+
+    print(f"Попыток сделано: {tr}")
 
 
 if __name__ == "__main__":
