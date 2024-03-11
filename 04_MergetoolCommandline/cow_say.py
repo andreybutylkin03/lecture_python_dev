@@ -15,20 +15,16 @@ class Cow(cmd.Cmd):
 
     def do_list_cows(self, args):
         """Lists all cow file names in the given directory"""
-        pass
+        print(*cowsay.list_cows())
 
-    def complete_list_cows(self, text, line, begidx, endidx):
-        pass
 
     def do_make_bubble(self, args):
         """
         Wraps text is wrap_text is true, then pads text and sets inside a bubble.
         This is the text that appears above the cows
         """
-        pass
+        print(cowsay.make_bubble(args))
 
-    def complete_make_bubble(self, text, line, begidx, endidx):
-        pass
 
     def do_cowsay(self, args):
         """
@@ -40,11 +36,12 @@ class Cow(cmd.Cmd):
         :param cow: -f – the available cows can be found by calling list_cows
         :param eyes: -e or eye_string
         :param tongue: -T or tongue_string
-        """
-        pass
+        """                
+
 
     def complete_cowsay(self, text, line, begidx, endidx):
         pass
+
 
     def do_cowthink(self, args):
         """
@@ -59,8 +56,10 @@ class Cow(cmd.Cmd):
         """
         pass
 
+
     def complete_cowthink(self, text, line, begidx, endidx):
         pass
+
 
     def do_EOF(self, args):
         return True
