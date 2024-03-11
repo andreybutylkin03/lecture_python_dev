@@ -37,7 +37,35 @@ class Cow(cmd.Cmd):
         :param eyes: -e or eye_string
         :param tongue: -T or tongue_string
         """                
+        cow = 'default'
+        eyes = cowsay.Option.eyes
+        tongue = cowsay.Option.tongue
+        message = ''
 
+        res = shlex.split(args, 0, 0)
+
+        i = 0
+
+        while i < len(res):
+            match res[i]:
+                case '-f':
+                    cow = res[i + 1]
+                    i += 1
+                case '-e':
+                    eyes = res[i + 1]
+                    i += 1
+                case '-T':
+                    tongue = res[i + 1]
+                    i += 1
+                case _:
+                    if message != '':
+                        message += ' '
+
+                    message += res[i]
+
+            i += 1
+
+        print(cowsay.cowsay(message, cow, eyes=eyes, tongue=tongue))
 
     def complete_cowsay(self, text, line, begidx, endidx):
         pass
