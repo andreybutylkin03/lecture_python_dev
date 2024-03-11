@@ -72,6 +72,7 @@ class Cow(cmd.Cmd):
 
     def complete_cowsay(self, text, line, begidx, endidx):
         res = shlex.split(line[:begidx], 0, 0)
+
         if res[-1] == '-f':
             return [c for c in cowsay.list_cows() if c.startswith(text)]
         elif res[-1] == '-e':
@@ -123,7 +124,14 @@ class Cow(cmd.Cmd):
 
 
     def complete_cowthink(self, text, line, begidx, endidx):
-        pass
+        res = shlex.split(line[:begidx], 0, 0)
+
+        if res[-1] == '-f':
+            return [c for c in cowsay.list_cows() if c.startswith(text)]
+        elif res[-1] == '-e':
+            return [c for c in self.eyes if c.startswith(text)]
+        elif res[-1] == '-T':
+            return [c for c in self.tongue if c.startswith(text)]
 
 
     def do_EOF(self, args):
