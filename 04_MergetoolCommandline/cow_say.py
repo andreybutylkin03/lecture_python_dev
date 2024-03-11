@@ -13,6 +13,9 @@ else:
 class Cow(cmd.Cmd):
     prompt = '>> '
 
+    eyes = ['==', 'XX', '$$', '@@', '**', '--', 'OO', '..']
+    tongue = ['U ', ' U']
+
     def do_list_cows(self, args):
         """Lists all cow file names in the given directory"""
         print(*cowsay.list_cows())
@@ -68,7 +71,13 @@ class Cow(cmd.Cmd):
         print(cowsay.cowsay(message, cow, eyes=eyes, tongue=tongue))
 
     def complete_cowsay(self, text, line, begidx, endidx):
-        pass
+        res = shlex.split(line[:begidx], 0, 0)
+        if res[-1] == '-f':
+            return [c for c in cowsay.list_cows() if c.startswith(text)]
+        elif res[-1] == '-e':
+            return [c for c in self.eyes if c.startswith(text)]
+        elif res[-1] == '-T':
+            return [c for c in self.tongue if c.startswith(text)]
 
 
     def do_cowthink(self, args):
