@@ -10,14 +10,42 @@ async def chat(reader, writer):
     me = None
     flag = True
 
-    send = asyncio.create_task(reader.readline())
-    receive = None
+    while q := await reader.readline():
+        text = q.decode().strip()
+
+        match text.split():
+            case ['who']:
+                writer.write(f"{list(clients.keys())}".encode() + b'\n')
+                await writer.drain()
+
+            case ['cows']:
+                writer.write(f"{list(cowss)}".encode() + b'\n')
+                await writer.drain()
+
+            case ['login', a] if a in cowss:
+                me = a
+                clients[me] = asyncio.Queue()
+                writer.write(b'login\n')
+                await writer.drain()
+
+                cowss -= {a}
+                break
+
+            case ['quit']:
+                flag = False
+                writer.close()
+                await writer.wait_closed()
+            case _:
+                writer.write(b'unknown\n')
+                await writer.drain()
+    
+    if flag:
+        send = asyncio.create_task(reader.readline())
+        receive = asyncio.create_task(clients[me].get())   
 
     while flag and not reader.at_eof():
-        if me is None:
-            done, pending = await asyncio.wait([send], return_when=asyncio.FIRST_COMPLETED)
-        else:
-            done, pending = await asyncio.wait([send, receive], return_when=asyncio.FIRST_COMPLETED)
+        done, pending = await asyncio.wait([send, receive], return_when=asyncio.FIRST_COMPLETED)
+        print("WOW")
 
         for q in done:
             if q is send:
@@ -27,20 +55,19 @@ async def chat(reader, writer):
 
                 match text.split():
                     case ['who']:
-                        for who in clients.keys():
-                            writer.write(who.encode() + b'\n')
-                            await writer.drain()
+                        writer.write(f"{list(clients.keys())}".encode() + b'\n')
+                        await writer.drain()
+
                     case ['cows']:
-                        for cow in cowss:
-                            writer.write(cow.encode() + b'\n')
-                            await writer.drain()
-                    case ['login', a] if a in cowss:
-                        pass
+                        writer.write(f"{list(cowss)}".encode() + b'\n')
+                        await writer.drain()
+
                     case ['say', cow, *hello] if me is not None and cow in clients.keys():
                         pass
                     case ['yield', *hello] if me is not None:
                         pass
                     case ['quit']:
+                        flag = False
                         send.cancel()
                         if receive is not None:
                             receive.cancel()
@@ -55,7 +82,10 @@ async def chat(reader, writer):
                         await writer.drain()
 
             elif q is receive:
-                pass
+                print("WOWw")
+                receive = asyncio.create_task(clients[me].get())
+                writer.write(f"{q.result()}\n".encode())
+                await writer.drain()
 
 
 async def main():
