@@ -64,19 +64,38 @@ class NCC(cmd.Cmd):
 
     def do_quit(self, args):
         s.sendall(f"quit\n".encode())
+        print()
+        return True
 
 
     def complete_login(self, text, line, begidx, endidx):
-        pass
+        host = "localhost"
+        port = 1337
+
+        ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        ss.connect((host, port))
+        
+        ss.sendall("cows\n".encode())
+        login_s = eval(ss.recv(1024).rstrip().decode())
+        ss.sendall("quit\n".encode())
+        ss.close()
+        return [c for c in login_s if c.startswith(text)]
 
 
     def complete_say(self, text, line, begidx, endidx):
-        pass
+        host = "localhost"
+        port = 1337
+
+        ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        ss.connect((host, port))
+
+        ss.sendall("who\n".encode())
+        who_s = eval(ss.recv(1024).rstrip().decode())
+        ss.sendall("quit\n".encode())
+        ss.close()
+        return [c for c in who_s if c.startswith(text)]
 
 
-    def do_EOF(self, args):
-        print()
-        return True
 
             
 if __name__ == "__main__":
