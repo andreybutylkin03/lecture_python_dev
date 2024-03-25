@@ -4,6 +4,7 @@ import cowsay
 import readline
 import rlcompleter
 import threading
+import socket
 
 
 if 'libedit' in readline.__doc__:
@@ -52,5 +53,16 @@ class NCC(cmd.Cmd):
         return True
 
 
+def serv(cmdl):
+    host = "localhost" 
+    port = 1337
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((host, port))
+        while msg := s.recv(1024).rstrip().decode():
+            print(f"\n{msg}\n{cmdl.prompt}{readline.get_line_buffer()}", end='', flush=True)
+            
 if __name__ == "__main__":
-    NCC().cmdloop()
+    cmdl = NCC()
+    serv_talk = threading.Thread(target=serv, args=(cmdl, ))
+    serv_talk.start()
+    cmdl.cmdloop()
